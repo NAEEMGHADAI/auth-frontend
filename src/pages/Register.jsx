@@ -5,6 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "../api/axios";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -206,7 +207,7 @@ const Register = () => {
           </form>
           <p>
             Already registered? <br />
-            <a href="/">Sign In</a>
+            <Link to="/login">Sign In</Link>
           </p>
         </section>
       )}
