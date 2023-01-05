@@ -5,7 +5,7 @@ import useAuth from "../hooks/useAuth";
 
 const LOGIN_URL = "/auth";
 const Login = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +40,7 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(JSON.stringify(response?.data));
+      // console.log(JSON.stringify(response?.data));
       // console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
       const roles = response?.data?.roles;
@@ -64,6 +64,15 @@ const Login = () => {
       errRef.current.focus();
     }
   };
+
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
+
   return (
     <section>
       <p
@@ -94,13 +103,22 @@ const Login = () => {
           required
         />
         <button>Sign In</button>
-        <p>
-          Need an Account? <br />
-          <span className="line">
-            <Link to="/register">Sign Up</Link>
-          </span>
-        </p>
+        <div className="persistCheck">
+          <input
+            type="checkbox"
+            id="persist"
+            onChange={togglePersist}
+            checked={persist}
+          />
+          <label htmlFor="persist">Trust This Device</label>
+        </div>
       </form>
+      <p>
+        Need an Account? <br />
+        <span className="line">
+          <Link to="/register">Sign Up</Link>
+        </span>
+      </p>
     </section>
   );
 };
