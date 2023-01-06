@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import useInput from "../hooks/useInput";
+import useToggle from "../hooks/useToggle";
 
 const LOGIN_URL = "/auth";
 const Login = () => {
-  const { setAuth, persist, setPersist } = useAuth();
+  const { setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,11 +16,10 @@ const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
 
-  const [user, setUser] = useState("");
-
+  const [user, resetUser, userAttributes] = useInput("user", ""); //useState("");
   const [pwd, setPwd] = useState("");
-
   const [errMsg, setErrMsg] = useState("");
+  const [check, toggleCheck] = useToggle("persist", false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -47,7 +48,8 @@ const Login = () => {
 
       setAuth({ user, pwd, roles, accessToken });
 
-      setUser("");
+      // setUser("");
+      resetUser();
       setPwd("");
       // setSuccess(true);
       navigate(from, { replace: true });
@@ -65,13 +67,13 @@ const Login = () => {
     }
   };
 
-  const togglePersist = () => {
-    setPersist((prev) => !prev);
-  };
+  // const togglePersist = () => {
+  //   setPersist((prev) => !prev);
+  // };
 
-  useEffect(() => {
-    localStorage.setItem("persist", persist);
-  }, [persist]);
+  // useEffect(() => {
+  //   localStorage.setItem("persist", persist);
+  // }, [persist]);
 
   return (
     <section>
@@ -90,8 +92,9 @@ const Login = () => {
           id="username"
           ref={userRef}
           autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
+          // onChange={(e) => setUser(e.target.value)}
+          // value={user}
+          {...userAttributes}
           required
         />
         <label htmlFor="password">Password:</label>
@@ -107,8 +110,8 @@ const Login = () => {
           <input
             type="checkbox"
             id="persist"
-            onChange={togglePersist}
-            checked={persist}
+            onChange={toggleCheck}
+            checked={check}
           />
           <label htmlFor="persist">Trust This Device</label>
         </div>
